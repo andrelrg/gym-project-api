@@ -1,6 +1,6 @@
 # Projeto Estrutura de dados II UNESP - Bauru
 
-##Instruções
+## Instruções
 Para Iniciar o projeto, é necessário inicialmente ter o docker instalado.
 Depois disso será necessário contruir a imagem do php:
 ```docker build docker-php ```
