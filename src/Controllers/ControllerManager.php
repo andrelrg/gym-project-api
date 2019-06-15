@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-    use App\Se\ReturnMessages;
+    use con\ReturnMessages;
 
     /**
      * Classe responsável por Auxiliar os controllers.
@@ -12,7 +12,7 @@ namespace App\Controllers;
     class ControllerManager{
         protected $get;
         protected $post;
-        
+
         function __construct($get, $post){
             $this->get = $get;
             $this->post = $post;
@@ -44,14 +44,14 @@ namespace App\Controllers;
         protected function badRequest(): array{
             return array(
                 'status'=>400, 
-                'content'=>ReturnMessages::$BadRequest
+                'content'=> "A requisição não possui todos os parametros necessários."
             );
         }
 
         protected function notAllowed(): array{
             return array(
                 'status'=>403, 
-                'content'=>ReturnMessages::$UserNotAllowed
+                'content'=>"O Usuário não possui permissão para realizar a ação."
             );
         }
     }
