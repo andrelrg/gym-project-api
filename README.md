@@ -1,5 +1,7 @@
 # Projeto Engenharia de software II UNESP - Bauru
 
+Desenvolvido por Matheus Melo e Andre Gaspar
+
 ## Instruções
 Para Iniciar o projeto, é necessário inicialmente ter o docker instalado.
 Depois disso será necessário contruir a imagem do php:
