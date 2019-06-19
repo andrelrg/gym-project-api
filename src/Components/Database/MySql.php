@@ -55,12 +55,14 @@ namespace Components\Database;
          * @param string query
          */
         public function executeRawSql($query){
-            
+            $return = [];
             $result = $this->conn->query($query) or die($this->conn->error);;
 
-            while($row = $result->fetch(\PDO::FETCH_ASSOC)) {
-                yield $row;
+            while($row = mysqli_fetch_assoc($result)) {
+                $return[] = $row;
             }
+
+            return $return;
         }
 
         /**
@@ -87,7 +89,32 @@ namespace Components\Database;
 
             $query = 'INSERT INTO ' . $table . $into_string . $values_string;
 
-            return $this->conn->query($query) === TRUE;
+            if(!$result = $this->conn->query($query)){
+                return('There was an error running the query [' . $this->conn->error . ']');
+            }
+
+            return true;
+        }
+
+        public function update($table, $values, $id){
+
+            $array_values = [];
+
+            if (is_array($values)) {
+                foreach ($values as $column => $value) {
+                    $array_values[] = $column . " = '" . $value . "'";
+                }
+            }
+
+            $values = implode(", ", $array_values);
+
+            $query = "UPDATE " . $table . " SET ". $values . " WHERE id = ". $id;
+
+            if(!$result = $this->conn->query($query)){
+                return('There was an error running the query [' . $this->conn->error . ']');
+            }
+
+            return true;
         }
 
         /**
@@ -109,9 +136,9 @@ namespace Components\Database;
         }
 
         private function prepareWhereString($where){
-            return ' WHERE ' . implode(', ', array_map(
+            return ' WHERE ' . implode(' AND ', array_map(
                 function($key, $value) {
-                    return $key . '=' . $value . '';
+                    return $key . "='" . $value . "'";
                 }, array_keys($where), array_values($where)));
         }
 
