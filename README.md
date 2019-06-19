@@ -1,4 +1,4 @@
-# Projeto Estrutura de dados II UNESP - Bauru
+# Projeto Engenharia de software II UNESP - Bauru
 
 ## Instruções
 Para Iniciar o projeto, é necessário inicialmente ter o docker instalado.
