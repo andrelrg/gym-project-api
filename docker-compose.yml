@@ -43,16 +43,18 @@ services:
             main:
                 aliases:
                     - gym_nginx
-    mysql:
-        image: mysql:5.7.20
-        volumes:
-            - type: bind
-              source: ./data
-              target: /var/lib/mysql
+    postgres:
+        image: postgres:9.4
         ports:
-            - "3307:3306"
-        environment:
-            - MYSQL_ALLOW_EMPTY_PASSWORD=true
+            - 5432:5432
+        volumes:
+            -   type: bind
+                source: ./data/postgresql
+                target: /var/lib/postgresql/data
+        networks:
+            main:
+                aliases:
+                    - gym_postgres
 networks:
     main:
         external: true

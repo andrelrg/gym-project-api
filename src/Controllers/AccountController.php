@@ -37,7 +37,6 @@ namespace App\Controllers;
                     break;
             }
 
-            $result = mb_convert_encoding($result,"UTF-8","auto");
             $return = json_encode($result, JSON_UNESCAPED_UNICODE);
 
             if ($return){
@@ -53,7 +52,6 @@ namespace App\Controllers;
             $usuario = new Usuario();
             $result = $usuario->buscarAlunos();
 
-            $result = mb_convert_encoding($result,"UTF-8","auto");
             $return = json_encode($result, JSON_UNESCAPED_UNICODE);
 
             if ($return){
@@ -70,7 +68,6 @@ namespace App\Controllers;
             $usuario = new Usuario();
             $result = $usuario->buscarUsuario($_GET["rg"], $_GET["tipo"]);
 
-            $result = mb_convert_encoding($result,"UTF-8","auto");
             $return = json_encode($result, JSON_UNESCAPED_UNICODE);
 
             if ($return){
@@ -87,7 +84,6 @@ namespace App\Controllers;
             $usuario = new Usuario();
             $result = $usuario->buscarPersonais();
 
-            $result = mb_convert_encoding($result,"UTF-8","auto");
             $return = json_encode($result, JSON_UNESCAPED_UNICODE);
 
             if ($return){
@@ -109,7 +105,6 @@ namespace App\Controllers;
 
             $return = $usuario->login($_GET["email"], $_GET["senha"]);
 
-            $return = mb_convert_encoding($return,"UTF-8","auto");
             $return = json_encode($return, JSON_UNESCAPED_UNICODE);
 
             if ($return){
@@ -128,7 +123,6 @@ namespace App\Controllers;
             $usuario = new Usuario();
             $result = $usuario->deletarUsuario($_POST["rg"], $_POST["type"]);
 
-            $result = mb_convert_encoding($result,"UTF-8","auto");
             $return = json_encode($result, JSON_UNESCAPED_UNICODE);
 
             if ($return){

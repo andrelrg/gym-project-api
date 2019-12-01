@@ -5,14 +5,14 @@ namespace Components\Database;
     use Settings\Settings;
 
     /**
-     * Classe resposável por Conectar ao banco MySql.
+     * Classe resposável por Conectar ao banco Postgres.
      * 
      * @author André Gapar <and_lrg@hotmail.com>
      */
     class PostgreSQLConnector{
 
         protected $conn;
-        private $conString = "host=%s port=%s dbname=%s user=%s password=%s";
+        private $conString = "pgsql:host=%s port=%s dbname=%s user=%s password=%s";
         
         function __construct(){
             $this->connect();
@@ -30,13 +30,13 @@ namespace Components\Database;
                 $set['password']
             );
 
-            $this->conn = pg_connect($conString);
+            // $this->conn = pg_connect($conString);
 
-//            $this->conn = new \PDO(
-//                $conString,
-//                $set['user'],
-//                $set['password']
-//            );
+           $this->conn = new \PDO(
+               $conString,
+               $set['user'],
+               $set['password']
+           );
 
             if (!$this->conn) {
                 die("Connection failed!");
@@ -44,7 +44,7 @@ namespace Components\Database;
         }
 
         public function close(){
-            pg_close($this->conn);
+            $this->conn = NULL;
         }
 
     }

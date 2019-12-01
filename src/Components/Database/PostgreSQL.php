@@ -15,22 +15,12 @@ namespace Components\Database;
          * @param string query
          */
         public function executeRawSql($query, $return = false){
-
             $return = [];
-            $result = pg_query($this->conn, $query);
 
-            if  (!$result) {
-                $return["status"] = "Error while execute Query";
-            } else{
-                $return["status"] = "Success!";
-                $return["results"] = array();
-                if ($return){
-                    $i = 0;
-                    while ($row = pg_fetch_array($result, $i)) {
-                        $return["results"][] = $row;
-                        $i++;
-                    }
-                }
+            $result = $this->conn->query($query) or die($this->conn->error);;
+
+            while($row = $result->fetch(\PDO::FETCH_ASSOC)) {
+                $return[] = $row;
             }
 
             return $return;

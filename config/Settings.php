@@ -10,8 +10,8 @@ namespace Settings;
 //            $str  = file_get_contents(dirname(__FILE__).'/config.json');
             return array(
                 'host' => 'postgres',
-                'user' => 'default',
-                'password' => 'secret',
+                'user' => 'postgres',
+                'password' => '',
                 'port' => '5432',
                 'database' =>  'gymdb'
             );
