@@ -14,13 +14,19 @@ namespace Components\Database;
          * 
          * @param string query
          */
-        public function executeRawSql($query, $return = false){
+        public function executeRawSql($query, $showResults = false){
             $return = [];
 
-            $result = $this->conn->query($query) or die($this->conn->error);;
+            $result = $this->conn->query($query) or $return["result"] = $this->conn->error;;
 
-            while($row = $result->fetch(\PDO::FETCH_ASSOC)) {
-                $return[] = $row;
+            if ($result){
+                $return["result"] = "success";
+            }
+
+            if ($showResults) {
+                while ($row = $result->fetch(\PDO::FETCH_ASSOC)) {
+                    $return["data"][] = str_replace(["'", "\\", '"'], '', $row);
+                }
             }
 
             return $return;
