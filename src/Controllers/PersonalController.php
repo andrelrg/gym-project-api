@@ -18,17 +18,8 @@ namespace App\Controllers;
                 return $this->badRequest();
             }
 
-            $aparelho = new Aparelho($this->post["maquina"]);
-
-            if ($aparelho){
-                $aparelho = $aparelho->getId();
-            }
-
-            if ($aparelho) {
-                $exercicio = new Exercicio();
-                $result = $exercicio->novoExercicio($_POST);
-
-            }
+            $exercicio = new Exercicio();
+            $result = $exercicio->novoExercicio($_POST);
 
             $result = mb_convert_encoding($result,"UTF-8","auto");
             $return = json_encode($result, JSON_UNESCAPED_UNICODE);
@@ -42,12 +33,12 @@ namespace App\Controllers;
         }
 
         public function buscaExercicio(){
-            if (!$this->checkRequest($this->get, array("id_exercicio"))){
+            if (!$this->checkRequest($this->get, array("nome"))){
                 return $this->badRequest();
             }
 
-            $exercicio = new Exercicio($_GET["id_exercicio"]);
-            $result = $exercicio->buscarExercicio();
+            $exercicio = new Exercicio();
+            $result = $exercicio->buscarExercicio($_GET["nome"]);
 
             $result = mb_convert_encoding($result,"UTF-8","auto");
             $return = json_encode($result, JSON_UNESCAPED_UNICODE);
@@ -77,12 +68,12 @@ namespace App\Controllers;
         }
 
         public function deletarExercicio(){
-            if (!$this->checkRequest($this->post, array("id_exercicio"))){
+            if (!$this->checkRequest($this->post, array("nome"))){
                 return $this->badRequest();
             }
 
-            $exercicio = new Exercicio($_POST["id_exercicio"]);
-            $result = $exercicio->deletarExercicio();
+            $exercicio = new Exercicio();
+            $result = $exercicio->deletarExercicio($_POST["nome"]);
 
             $result = mb_convert_encoding($result,"UTF-8","auto");
             $return = json_encode($result, JSON_UNESCAPED_UNICODE);
@@ -98,12 +89,12 @@ namespace App\Controllers;
 /* ----------------------------- APARELHOS ----------------------------------- */
 
         public function buscaAparelho(){
-            if (!$this->checkRequest($this->get, array("id_aparelho"))){
+            if (!$this->checkRequest($this->get, array("codigo"))){
                 return $this->badRequest();
             }
 
-            $aparelho = new Aparelho($_GET["id_aparelho"]);
-            $result = $aparelho->buscarAparelho();
+            $aparelho = new Aparelho();
+            $result = $aparelho->buscarAparelho($_GET["codigo"]);
 
             $result = mb_convert_encoding($result,"UTF-8","auto");
             $return = json_encode($result, JSON_UNESCAPED_UNICODE);
@@ -133,17 +124,13 @@ namespace App\Controllers;
         }
 
         public function adicionarAparelho(){
-            $result = ["Aparelho não cadastrado"];
-
             if (!$this->checkRequest($this->post, array("nome", "musculo", "identificacao"))){
                 return $this->badRequest();
             }
 
             $aparelho = new Aparelho();
 
-            if (!$aparelho->buscarAparelhoPorNome($_POST["nome"], $_POST["identificacao"])) {
-                $result = $aparelho->novoAparelho($_POST);
-            }
+            $result = $aparelho->novoAparelho($_POST);
 
             $result = mb_convert_encoding($result,"UTF-8","auto");
             $return = json_encode($result, JSON_UNESCAPED_UNICODE);
@@ -157,12 +144,12 @@ namespace App\Controllers;
         }
 
         public function deletarAparelho(){
-            if (!$this->checkRequest($this->post, array("id_aparelho"))){
+            if (!$this->checkRequest($this->post, array("codigo"))){
                 return $this->badRequest();
             }
 
-            $aparelho = new Aparelho($_POST["id_aparelho"]);
-            $result = $aparelho->deletarAparelho();
+            $aparelho = new Aparelho();
+            $result = $aparelho->deletarAparelho($_POST["codigo"]);
 
             $result = mb_convert_encoding($result,"UTF-8","auto");
             $return = json_encode($result, JSON_UNESCAPED_UNICODE);
@@ -180,17 +167,12 @@ namespace App\Controllers;
         public function criarTreino(){
             $result = [];
 
-            if (!$this->checkRequest($this->post, array("id_aluno", "dia") || !is_array($_POST["id_exercicio"]))){
+            if (!$this->checkRequest($this->post, array("rg_aluno", "dia", "exercicios"))){
                 return $this->badRequest();
             }
 
-            foreach ($_POST["id_exercicio"] as $key=>$id_exercicio){
-                $exercicio = new Exercicio($id_exercicio);
-                if ($exercicio->buscarExercicio()){
-                    $treino = new Treino();
-                    $result[] = $treino->novoTreino($_POST, $id_exercicio, $key + 1);
-                }
-            }
+            $treino = new Treino();
+            $result = $treino->novoTreino($_POST);
 
             $result = mb_convert_encoding($result,"UTF-8","auto");
             $return = json_encode($result, JSON_UNESCAPED_UNICODE);
@@ -204,12 +186,12 @@ namespace App\Controllers;
         }
 
         public function deletarTreino(){
-            if (!$this->checkRequest($this->post, array("id_aluno", "dia"))){
+            if (!$this->checkRequest($this->post, array("rg_aluno"))){
                 return $this->badRequest();
             }
 
             $treino = new Treino();
-            $result = $treino->deletarTreino($_POST);
+            $result = $treino->deletarTreino($_POST["rg_aluno"]);
 
             $result = mb_convert_encoding($result,"UTF-8","auto");
             $return = json_encode($result, JSON_UNESCAPED_UNICODE);
@@ -223,12 +205,12 @@ namespace App\Controllers;
         }
 
         public function buscaTreinoAluno(){
-            if (!$this->checkRequest($this->get, array("id_aluno"))){
+            if (!$this->checkRequest($this->get, array("rg_aluno"))){
                 return $this->badRequest();
             }
 
             $treino = new Treino();
-            $result = $treino->buscarTreinoPorAluno($_GET["id_aluno"]);
+            $result = $treino->buscarTreinoPorAluno($_GET["rg_aluno"]);
 
             $result = mb_convert_encoding($result,"UTF-8","auto");
             $return = json_encode($result, JSON_UNESCAPED_UNICODE);

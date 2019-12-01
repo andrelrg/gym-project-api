@@ -66,7 +66,7 @@ create type Exercicio_TY as (
 );
 
 CREATE TABLE Pessoas (
-    usuario Usuario_TY
+    usuario Usuario_TY PRIMARY KEY
 );
 
 CREATE TABLE Alunos (
@@ -78,24 +78,29 @@ CREATE TABLE Personais (
 ) INHERITS (Pessoas);
 
 CREATE TABLE Academias (
-	academia Academia_TY
+	academia Academia_TY PRIMARY KEY
 );
 
 CREATE TABLE Aparelhos (
-	aparelho Aparelho_TY
+	aparelho Aparelho_TY PRIMARY KEY
 );
 
 CREATE TABLE Exercicios (
-	exercicio Exercicio_TY
-) INHERITS (Aparelhos);
+	exercicio Exercicio_TY PRIMARY KEY,
+	aparelho Aparelho_TY
+);
 
 CREATE TABLE Treinos (
-	dia varchar(3)
-) INHERITS (Exercicios, Alunos);
+	dia varchar(3),
+	exercicio Exercicio_TY[],
+	aluno Aluno_TY,
+	usuario Usuario_TY PRIMARY KEY
+);
 
 CREATE TABLE Agendamentos (
-	aluno Aluno_TY,
-	personal Personal_TY,
+	aluno Usuario_TY,
+	personal Usuario_TY,
+	academia Academia_TY,
 	dia date,
 	hora varchar(10)
-) INHERITS (Academias);
+);

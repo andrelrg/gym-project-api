@@ -6,23 +6,18 @@ use Components\Database\MySql;
 
 class Exercicio{
 
-    private $table = "Exercicio";
-    private $id_exercicio;
-
-    function __construct($id_exercicio = NULL){
-        $this->id_exercicio = $id_exercicio;
+    function __construct(){
     }
 
-    public function buscarExercicio(){
-        if (!$this->id_exercicio) {
+    public function buscarExercicio($nome){
+        if (!$nome) {
             return false;
         }
 
-        $sql = "SELECT e.*, a.nome AS nome_aparelho, a.identificacao AS identificacao_aparelho, a.musculo FROM ".$this->table." e INNER JOIN Aparelho a ON a.id = e.maquina WHERE e.id = ".$this->id_exercicio;
-
+        $raw = "SELECT * FROM Exercicios WHERE (exercicio).Nome = '$nome'";
 
         $mysql = new MySql();
-        $result = $mysql->executeRawSql($sql);
+        $result = $mysql->executeRawSql($raw);
 
         $mysql->close();
 
@@ -30,34 +25,26 @@ class Exercicio{
     }
 
     public function novoExercicio($data){
-        $success = false;
+        if (empty($data)) {
+            return false;
+        }
+        extract($data);
 
-        $insert = array(
-            'nome'=>$data['nome'],
-            'series'=>$data['series'],
-            'repeticoes'=>$data['repeticoes'],
-            'descanso'=>$data['descanso'],
-            'maquina'=>$data['maquina'],
-        );
+        $raw = "insert into Exercicios (aparelho, exercicio.Nome, exercicio.Series, exercicio.Repeticoes, exercicio.Descanso) values 
+            ((SELECT aparelho FROM Aparelhos WHERE (aparelho).codigo = '$maquina'),
+            '$nome', '$series', '$repeticoes', '$descanso');";
 
         $mysql = new MySql();
-
-        if (isset($data["id_exercicio"])){
-            $success["result"] = $mysql->update($this->table, $insert, $data["id_exercicio"]);
-            $success["id"] = $data["id_exercicio"];
-        } else{
-            $success["result"] = $mysql->insert($this->table, $insert);
-            $success["id"] = $mysql->lastId();
-        }
+        $result = $mysql->executeRawSql($raw);
 
         $mysql->close();
 
-        return $success;
+        return $result;
     }
 
     public function mostrarExercicios(){
 
-        $sql = "SELECT e.*, a.nome AS nome_aparelho, a.identificacao AS identificacao_aparelho, a.musculo FROM ".$this->table." e INNER JOIN Aparelho a ON a.id = e.maquina";
+        $sql = "SELECT * FROM Exercicios";
 
         $mysql = new MySql();
         $result = $mysql->executeRawSql($sql);
@@ -67,29 +54,19 @@ class Exercicio{
         return $result;
     }
 
-    public function deletarExercicio(){
-        if (!$this->id_exercicio) {
+    public function deletarExercicio($nome){
+        if (!$nome) {
             return false;
         }
 
-        $where = array("id"=>$this->id_exercicio);
+        $raw = "DELETE FROM Exercicios WHERE (exercicio).Nome = '$nome'";
 
         $mysql = new MySql();
-        $result = $mysql->delete($this->table, $where);
+        $result = $mysql->executeRawSql($raw);
 
         $mysql->close();
+
         return $result;
-    }
-
-    public function buscarExercicioPorNome($nome){
-        $field = array('*');
-        $where = array('nome'=>$nome);
-        $mysql = new MySql();
-
-        $success = $mysql->select($this->table, $field, $where);
-        $mysql->close();
-
-        return $success;
     }
 
 }

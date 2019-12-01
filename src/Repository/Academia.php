@@ -6,11 +6,7 @@ use Components\Database\MySql;
 
 class Academia{
 
-    private $table = "Academia";
-    private $id_academia;
-
-    function __construct($id_academia = NULL){
-        $this->id_academia = $id_academia;
+    function __construct(){
     }
 
     public function buscarAcademia($nome){
@@ -18,7 +14,7 @@ class Academia{
             return false;
         }
 
-        $raw = "select * from Academia where Nome = '$nome';";
+        $raw = "select * from Academias where (academia).Nome = '$nome';";
         $mysql = new MySql();
         $result = $mysql->executeRawSql($raw);
 
@@ -34,10 +30,11 @@ class Academia{
         }
         extract($data);
 
-        $raw = "insert into Academia values (Academia_TY('$nome',
-                Endereco_TY('$rua', $numero, '$cidade', '$bairro', $cep, '$estado'),
-                Telefone_NT(Telefone_TY($ddd, $telefone)),
-                '$email', '$funcionamento_semana', '$funcionamento_sabado', '$funcionamento_domingo', '$funcionamento_feriado'));";
+        $raw = "insert into Academias (academia.Nome, academia.Endereco, academia.Telefone, academia.Email, academia.Funcionamento_semana, academia.Funcionamento_sabado, academia.Funcionamento_domingo, academia.Funcionamento_feriado) values 
+                ('$nome',
+                ARRAY[('$rua', '$numero', '$cidade', '$bairro', '$cep', '$estado')::Endereco_TY],
+                ARRAY[('$ddd', '$telefone')::Telefone_TY],
+                '$email', '$funcionamento_semana', '$funcionamento_sabado', '$funcionamento_domingo', '$funcionamento_feriado');";
 
         $mysql = new MySql();
         $result = $mysql->executeRawSql($raw);
@@ -49,7 +46,7 @@ class Academia{
 
     public function mostrarAcademias(){
 
-        $raw = "SELECT * FROM Academia;";
+        $raw = "SELECT * FROM Academias;";
 
         $mysql = new MySql();
         $result = $mysql->executeRawSql($raw);
@@ -64,7 +61,7 @@ class Academia{
             return false;
         }
 
-        $raw = "DELETE FROM Academia WHERE Nome = '$nome';";
+        $raw = "DELETE FROM Academia WHERE (academia).Nome = '$nome';";
 
         $mysql = new MySql();
         $result = $mysql->executeRawSql($raw);

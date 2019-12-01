@@ -6,89 +6,68 @@ use Components\Database\MySql;
 
 class Aparelho{
 
-    private $table = "Aparelho";
-    private $id_aparelho;
-
-    function __construct($id_aparelho = NULL){
-        $this->id_aparelho = $id_aparelho;
+    function __construct(){
     }
 
     public function getId(){
         return $this->id_aparelho;
     }
 
-    public function buscarAparelho(){
-        if (!$this->id_aparelho) {
+    public function buscarAparelho($codigo){
+        if (!$codigo) {
             return false;
         }
 
-        $where = array('id'=>$this->id_aparelho);
-        $mysql = new MySql();
+        $raw = "SELECT * FROM Aparelhos WHERE (aparelho).Codigo = '$codigo';";
 
-        $result = $mysql->select($this->table, NULL, $where);
+        $mysql = new MySql();
+        $result = $mysql->executeRawSql($raw);
 
         $mysql->close();
+
         return $result;
     }
 
     public function novoAparelho($data){
-        $insert = array(
-            'nome'=>$data['nome'],
-            'musculo'=>$data['musculo'],
-            'identificacao'=>$data['identificacao'],
-        );
+        if (empty($data)) {
+            return false;
+        }
+        extract($data);
+
+        $raw = "insert into Aparelhos (aparelho.Codigo, aparelho.Nome, aparelho.Musculo, aparelho.Identificacao) values 
+            ('$codigo', '$nome', '$musculo', '$identificacao');";
 
         $mysql = new MySql();
-
-        if (isset($data["id_aparelho"])){
-            $success["result"] = $mysql->update($this->table, $insert, $data["id_aparelho"]);
-            $success["id"] = $data["id_aparelho"];
-        } else{
-            $success["result"] = $mysql->insert($this->table, $insert);
-            $success["id"] = $mysql->lastId();
-        }
+        $result = $mysql->executeRawSql($raw);
 
         $mysql->close();
 
-        return $success;
+        return $result;
     }
 
     public function mostrarAparelhos(){
-        $mysql = new MySql();
+        $raw = "SELECT * FROM Aparelhos;";
 
-        $result = $mysql->select($this->table, null, null);
+        $mysql = new MySql();
+        $result = $mysql->executeRawSql($raw);
 
         $mysql->close();
+
         return $result;
     }
 
-    public function deletarAparelho(){
-        if (!$this->id_aparelho) {
+    public function deletarAparelho($codigo){
+        if (!$codigo) {
             return false;
         }
 
-        $where = array("id"=>$this->id_aparelho);
+        $raw = "DELETE FROM Aparelhos WHERE (aparelho).Codigo = '$codigo';";
 
         $mysql = new MySql();
-        $result = $mysql->delete($this->table, $where);
+        $result = $mysql->executeRawSql($raw);
 
         $mysql->close();
-        return $result;
-    }
 
-    public function buscarAparelhoPorNome($nome, $ref = ""){
-        $field = array('*');
-        $where = array('nome'=>$nome);
-
-        if (!empty($ref)){
-            $where["identificacao"] = $ref;
-        }
-
-        $mysql = new MySql();
-
-        $result = $mysql->select($this->table, $field, $where);
-
-        $mysql->close();
         return $result;
     }
 

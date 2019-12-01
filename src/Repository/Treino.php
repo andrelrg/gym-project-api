@@ -6,80 +6,72 @@ use Components\Database\MySql;
 
 class Treino{
 
-    private $table = "Treino";
-    private $id_treino;
-
-    function __construct($id_treino = NULL){
-        $this->id_treino = $id_treino;
+    function __construct(){
     }
 
-    public function buscarTreino(){
-        if (!$this->id_treino) {
+    public function buscarTreinoPorAluno($rg_aluno){
+        if (!$rg_aluno) {
             return false;
         }
 
-        $where = array('id'=>$this->id_treino);
-        $mysql = new MySql();
-
-        $result = $mysql->select($this->table, NULL, $where);
-
-        $mysql->close();
-        return $result;
-    }
-
-    public function buscarTreinoPorAluno($id_aluno){
-        if (!$id_aluno) {
-            return false;
-        }
-
-        $sql = "SELECT t.*, e.nome AS nome_exercicio, e.series AS series_exercicio, e.repeticoes AS repeticoes_exercicio, e.descanso AS descanso_exercicio, a.nome AS nome_aparelho, a.identificacao AS identificacao_aparelho
-                FROM ".$this->table." t INNER JOIN Exercicio e ON e.id = t.id_exercicio INNER JOIN Aparelho a ON a.id = e.maquina
-                WHERE t.id_aluno = ".$id_aluno;
+        $raw = "SELECT * FROM Treinos WHERE (usuario).RG = '$rg_aluno';";
 
         $mysql = new MySql();
-        $result = $mysql->executeRawSql($sql);
+        $result = $mysql->executeRawSql($raw);
 
         $mysql->close();
 
         return $result;
     }
 
-    public function novoTreino($data, $id_exercicio, $ordem = 1){
-        if (!$id_exercicio || !$data['id_aluno'] || empty($data)) {
+    public function novoTreino($data){
+        if (!$data) {
             return false;
         }
 
         $insert = array(
-            'id_aluno'=>$data['id_aluno'],
-            'id_exercicio'=>$id_exercicio,
+            'rg_aluno'=>$data['rg_aluno'],
+            'exercicios'=>$data['exercicios'],
             'dia'=>$data['dia'] ?: 'NOW()',
-            'ordem'=>$ordem,
         );
 
-        $mysql = new MySql();
+        if (empty($data)) {
+            return false;
+        }
+        extract($data);
 
-        $success["result"] = $mysql->insert($this->table, $insert);
-        $success["id"] = $mysql->lastId();
+        foreach($exercicios as $exercicio){
+            $rawAux[] = "(SELECT exercicio FROM Exercicios WHERE (exercicio).Nome = '$exercicio')::Exercicio_TY";
+        }
+
+        $raw = "insert into Treinos (dia, aluno, usuario, exercicio) values 
+            ('$dia',
+            (SELECT aluno FROM Alunos WHERE (usuario).RG = '$rg_aluno'),
+            (SELECT usuario FROM Alunos WHERE (usuario).RG = '$rg_aluno'),
+            ARRAY[".
+                implode(', ', $rawAux)
+            ."]);";
+
+        $mysql = new MySql();
+        $result = $mysql->executeRawSql($raw);
 
         $mysql->close();
 
-        return $success;
+        return $result;
     }
 
-    public function deletarTreino($data){
-        if (!$data['dia'] || !$data['id_aluno'] || empty($data)) {
+    public function deletarTreino($rg_aluno){
+        if (!$rg_aluno) {
             return false;
         }
 
-        $where = array(
-            "id_aluno"=>$data['id_aluno'],
-            "dia"=>$data['dia'],
-            );
+        $raw = "DELETE FROM Treinos WHERE (usuario).RG = '$rg_aluno';";
 
         $mysql = new MySql();
-        $result = $mysql->delete($this->table, $where);
+        $result = $mysql->executeRawSql($raw);
 
         $mysql->close();
+
         return $result;
     }
 }

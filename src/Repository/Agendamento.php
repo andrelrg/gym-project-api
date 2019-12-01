@@ -6,13 +6,7 @@ use Components\Database\MySql;
 
 class Agendamento{
 
-    private $table = "Agendamento";
-    private $id_aluno;
-    private $id_personal;
-
-    function __construct($id_personal = NULL, $id_aluno = NULL){
-        $this->id_personal = $id_personal;
-        $this->id_aluno = $id_aluno;
+    function __construct(){
     }
 
     public function buscarAgendamento($tipo, $rg){
@@ -21,9 +15,9 @@ class Agendamento{
         }
 
         if ($tipo == 'aluno') {
-            $raw = "select * from Agendamento where RG = $rg;";
+            $raw = "select * from Agendamentos where (aluno).RG = $rg;";
         } elseif ($tipo == 'personal'){
-            $raw = "select * from Agendamento where RG = $rg;";
+            $raw = "select * from Agendamentos where (personal).RG = $rg;";
         }
         $mysql = new MySql();
         $result = $mysql->executeRawSql($raw);
@@ -39,11 +33,11 @@ class Agendamento{
         }
         extract($data);
 
-        $raw = "insert into Agendamento values (Agendamento_TY(1,
-                TO_DATE('$dia','dd/mm/yyyy'), '$hora',
-                (SELECT ref(a) FROM Aluno a WHERE a.RG = $personal_rg),
-                (SELECT ref(p) FROM Personal p WHERE p.RG = $aluno_rg),
-                (SELECT ref(ac) FROM Academia ac WHERE ac.Nome = 'academia_nome')));";
+        $raw = "insert into Agendamentos (aluno, personal, academia, dia, hora) values 
+                ((SELECT aluno FROM Alunos WHERE (usuario).RG = '$aluno_rg'),
+                (SELECT personal FROM Personais WHERE (usuario).RG = '$personal_rg'),
+                (SELECT academia FROM Academias WHERE (academia).Nome = '$academia_nome'),
+                to_date('$dia','dd/mm/yyyy'), '$hora');";
 
         $mysql = new MySql();
         $result = $mysql->executeRawSql($raw);

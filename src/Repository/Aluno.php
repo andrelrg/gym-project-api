@@ -6,13 +6,7 @@ use Components\Database\MySql;
 
 class Aluno{
 
-    private $table = "Aluno";
-    private $id_aluno;
-    private $id_usuario;
-
-    function __construct($id_usuario = NULL, $id_aluno = NULL){
-        $this->id_usuario = $id_usuario;
-        $this->id_aluno = $id_aluno;
+    function __construct(){
     }
 
     public function novoAluno($data = []){
@@ -21,11 +15,12 @@ class Aluno{
         }
         extract($data);
 
-        $raw = "insert into Aluno values (Aluno_TY($rg, '$nome', '$sobrenome', '$email', '$senha', '$sexo',
-                Telefone_NT(Telefone_TY($ddd, $telefone)),
-                Endereco_TY('$rua', $numero, '$cidade', '$bairro', $cep, '$estado'),
+        $raw = "insert into Alunos (usuario, aluno.Objetivo, aluno.Peso, aluno.Altura, aluno.Med_braco_direito, aluno.Med_braco_esquerdo, aluno.Med_perna_direita, aluno.Med_perna_esquerda, aluno.Med_peito, aluno.Med_abdomen) values 
+                (('$rg', '$nome', '$sobrenome', '$email', '$senha', '$sexo',
+                ARRAY[('$ddd', '$telefone')::Telefone_TY],
+                ARRAY[('$rua', '$numero', '$cidade', '$bairro', '$cep', '$estado')::Endereco_TY]),
                 '$objetivo', $peso, $altura, $med_braco_direito, $med_braco_esquerdo, $med_perna_direita,
-                $med_perna_esquerda, $med_peito, $med_abdomen));";
+                $med_perna_esquerda, $med_peito, $med_abdomen);";
 
         $mysql = new MySql();
         $result = $mysql->executeRawSql($raw);
