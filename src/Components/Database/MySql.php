@@ -54,7 +54,9 @@ namespace Components\Database;
          * 
          * @param string query
          */
-        public function executeRawSql($query){
+        public function executeRawSql($query, $debug = false){
+
+            var_dump($query); exit;
             $return = [];
             $result = $this->conn->query($query) or die($this->conn->error);;
 

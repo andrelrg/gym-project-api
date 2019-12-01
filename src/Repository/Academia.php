@@ -13,86 +13,64 @@ class Academia{
         $this->id_academia = $id_academia;
     }
 
-    public function buscarAcademia(){
-        if (!$this->id_academia) {
+    public function buscarAcademia($nome){
+        if (!$nome) {
             return false;
         }
 
-        $where = array('id'=>$this->id_academia);
+        $raw = "select * from Academia where Nome = '$nome';";
         $mysql = new MySql();
+        $result = $mysql->executeRawSql($raw);
 
-        $success = $mysql->select($this->table, null, $where);
         $mysql->close();
 
-        return $success;
+        return $result;
     }
 
     public function novoAcademia($data){
-        $success = false;
 
-        $insert = array(
-            'nome'=>$data['nome'],
-            'rua'=>$data['rua'],
-            'numero'=>$data['numero'],
-            'cidade'=>$data['cidade'],
-            'estado'=>$data['estado'],
-            'cep'=>$data['cep'],
-            'telefone'=>$data['telefone'],
-            'email'=>$data['email'],
-            'seg_inicio'=>$data['seg_inicio'],
-            'seg_fim'=>$data['seg_fim'],
-            'ter_inicio'=>$data['ter_inicio'],
-            'ter_fim'=>$data['ter_fim'],
-            'qua_inicio'=>$data['qua_inicio'],
-            'qua_fim'=>$data['qua_fim'],
-            'qui_inicio'=>$data['qui_inicio'],
-            'qui_fim'=>$data['qui_fim'],
-            'sex_inicio'=>$data['sex_inicio'],
-            'sex_fim'=>$data['sex_fim'],
-            'sab_inicio'=>$data['sab_inicio'],
-            'sab_fim'=>$data['sab_fim'],
-            'dom_inicio'=>$data['dom_inicio'],
-            'dom_fim'=>$data['dom_fim'],
-            'feriado_inicio'=>$data['feriado_inicio'],
-            'feriado_fim'=>$data['feriado_fim'],
-        );
+        if (empty($data)) {
+            return false;
+        }
+        extract($data);
+
+        $raw = "insert into Academia values (Academia_TY('$nome',
+                Endereco_TY('$rua', $numero, '$cidade', '$bairro', $cep, '$estado'),
+                Telefone_NT(Telefone_TY($ddd, $telefone)),
+                '$email', '$funcionamento_semana', '$funcionamento_sabado', '$funcionamento_domingo', '$funcionamento_feriado'));";
 
         $mysql = new MySql();
-
-        if (isset($data["id_academia"])){
-            $success["result"] = $mysql->update($this->table, $insert, $data["id_academia"]);
-            $success["id"] = $data["id_academia"];
-        } else{
-            $success["result"] = $mysql->insert($this->table, $insert);
-            $success["id"] = $mysql->lastId();
-        }
+        $result = $mysql->executeRawSql($raw);
 
         $mysql->close();
 
-        return $success;
+        return $result;
     }
 
     public function mostrarAcademias(){
 
-        $mysql = new MySql();
+        $raw = "SELECT * FROM Academia;";
 
-        $success = $mysql->select($this->table, null, null);
+        $mysql = new MySql();
+        $result = $mysql->executeRawSql($raw);
+
         $mysql->close();
 
-        return $success;
+        return $result;
     }
 
-    public function deletarAcademia(){
-        if (!$this->id_academia) {
+    public function deletarAcademia($nome){
+        if (!$nome) {
             return false;
         }
 
-        $where = array("id"=>$this->id_academia);
+        $raw = "DELETE FROM Academia WHERE Nome = '$nome';";
 
         $mysql = new MySql();
-        $result = $mysql->delete($this->table, $where);
+        $result = $mysql->executeRawSql($raw);
 
         $mysql->close();
+
         return $result;
     }
 

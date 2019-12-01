@@ -36,28 +36,22 @@ class Personal{
     }
 
     public function novoPersonal($data = []){
-        if (empty($data) || !isset($data['id_usuario'])) {
+        if (empty($data)) {
             return false;
         }
+        extract($data);
 
-        $insert = array(
-            'id_usuario'=>$data['id_usuario'],
-            'especializacao'=>$data['especializacao'],
-            'tempo_experiencia'=>$data['tempo_experiencia']
-        );
+        $raw = "insert into Personal values (Personal_TY($rg, '$nome', '$sobrenome', '$email', '$senha', '$sexo',
+                Telefone_NT(Telefone_TY($ddd, $telefone)),
+                Endereco_TY('$rua', $numero, '$cidade', '$bairro', $cep, '$estado'),
+                '$especializacao', '$tempo_experiencia'));";
 
         $mysql = new MySql();
+        $result = $mysql->executeRawSql($raw);
 
-        if (isset($data["id_personal"])){
-            $success["result"] = $mysql->update($this->table, $insert, $data["id_personal"]);
-            $success["id_personal"] = $data["id_personal"];
-        } else{
-            $success["result"] = $mysql->insert($this->table, $insert);
-            $success["id_personal"] = $mysql->lastId();
-        }
         $mysql->close();
 
-        return $success;
+        return $result;
     }
 }
 

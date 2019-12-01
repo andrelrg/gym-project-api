@@ -15,47 +15,42 @@ class Agendamento{
         $this->id_aluno = $id_aluno;
     }
 
-    public function buscarAgendamento($tipo, $id){
-        $where = "";
-        if ($tipo == "aluno"){
-            $where = "WHERE agend.id_aluno = ".$id;
-        }elseif ($tipo == "personal"){
-            $where = "WHERE agend.id_personal = ".$id;
+    public function buscarAgendamento($tipo, $rg){
+        if (!$rg && !$tipo) {
+            return false;
         }
 
-        $sql = "SELECT ua.nome AS nome_aluno, ua.sobrenome AS sobrenome_aluno, ua.email AS email_aluno, ua.telefone AS telefone_aluno,
-                up.nome AS nome_personal, up.sobrenome AS sobrenome_personal, up.email AS email_personal, up.telefone AS telefone_personal,
-                acad.nome AS nome_academia, acad.rua AS rua_academia, acad.numero AS numero_academia, acad.cidade AS cidade_academia, acad.estado AS estado_academia
-                FROM ".$this->table." agend INNER JOIN Aluno a ON a.id = agend.id_aluno INNER JOIN Usuario ua ON ua.id = a.id_usuario
-                INNER JOIN Personal p ON p.id = agend.id_personal INNER JOIN Usuario up ON up.id = p.id_usuario
-                INNER JOIN Academia acad ON acad.id = agend.id_academia ".$where;
-
+        if ($tipo == 'aluno') {
+            $raw = "select * from Agendamento where RG = $rg;";
+        } elseif ($tipo == 'personal'){
+            $raw = "select * from Agendamento where RG = $rg;";
+        }
         $mysql = new MySql();
-        $result = $mysql->executeRawSql($sql);
+        $result = $mysql->executeRawSql($raw);
 
         $mysql->close();
+
         return $result;
     }
 
     public function novoAgendamento($data = []){
-        if (empty($data) || !isset($data['id_personal']) || !isset($data['id_aluno']) || !isset($data['id_academia'])) {
+        if (empty($data)) {
             return false;
         }
+        extract($data);
 
-        $insert = array(
-            'id_personal'=>$data['id_personal'],
-            'id_aluno'=>$data['id_aluno'],
-            'id_academia'=>$data['id_academia'],
-            'dia'=>$data['dia'],
-            'hora'=>$data['hora']
-        );
+        $raw = "insert into Agendamento values (Agendamento_TY(1,
+                TO_DATE('$dia','dd/mm/yyyy'), '$hora',
+                (SELECT ref(a) FROM Aluno a WHERE a.RG = $personal_rg),
+                (SELECT ref(p) FROM Personal p WHERE p.RG = $aluno_rg),
+                (SELECT ref(ac) FROM Academia ac WHERE ac.Nome = 'academia_nome')));";
 
         $mysql = new MySql();
+        $result = $mysql->executeRawSql($raw);
 
-        $success = $mysql->insert($this->table, $insert);
         $mysql->close();
 
-        return $success;
+        return $result;
     }
 }
 

@@ -43,7 +43,6 @@ create or replace type Aluno_TY under Usuario_TY (
 );
 
 create or replace type Academia_TY as object (
- Id number(5),
  Nome varchar2(20),
  Endereco Endereco_TY,
  Telefone Telefone_NT,
@@ -55,7 +54,6 @@ create or replace type Academia_TY as object (
 );
 
 create or replace type Aparelho_TY as object (
- Id number(5),
  Codigo number(10),
  Nome varchar2(20),
  Musculo varchar2(20),
@@ -63,7 +61,6 @@ create or replace type Aparelho_TY as object (
 );
 
 create or replace type Exercicio_TY as object (
- Id number(5),
  Nome varchar2(20),
  Series number(5),
  Repeticoes number(5),
@@ -79,7 +76,6 @@ create or replace type Treino_TY as object (
 );
 
 create or replace type Agendamento_TY as object (
- Id number(5),
  Dia date,
  Hora varchar2(10),
  Aluno ref Aluno_TY,
@@ -89,15 +85,12 @@ create or replace type Agendamento_TY as object (
 
 
 -- Criação das tabelas
-
-create table Pessoas of Usuario_TY (primary key (RG))
- nested table Telefone store as Telefone_ST;
 create table Aluno of Aluno_TY (primary key (RG))
  nested table Telefone store as Telefone_Aluno_ST;
 create table Personal of Personal_TY (primary key (RG))
  nested table Telefone store as Telefone_Personal_ST;
-create table Academia of Academia_TY (primary key (Id))
+create table Academia of Academia_TY (primary key (Nome))
  nested table Telefone store as Telefone_Academia_ST;
-create table Aparelho of Aparelho_TY (primary key (Id));
-create table Exercicio of Exercicio_TY (primary key (Id));
-create table Agendamento of Agendamento_TY (primary key (Id));
+create table Aparelho of Aparelho_TY (primary key (Codigo));
+create table Exercicio of Exercicio_TY (primary key (Nome));
+create table Agendamento of Agendamento_TY;

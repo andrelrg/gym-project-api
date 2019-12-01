@@ -23,8 +23,8 @@ namespace App;
     Router::route(POST, '/criarUsuario', 'AccountController', 'criarUsuario');
     Router::route(POST, '/deletarUsuario', 'AccountController', 'deletarUsuario');
     Router::route(GET, '/buscaAlunos', 'AccountController', 'buscaAlunos');
+    Router::route(GET, '/buscaPersonais', 'AccountController', 'buscaPersonais');
     Router::route(GET, '/buscaUsuario', 'AccountController', 'buscaUsuario');
-    Router::route(GET, '/buscaUsuarioTipo', 'AccountController', 'buscaUsuarioTipo');
     Router::route(GET, '/login', 'AccountController', 'login');
 
     Router::route(POST, '/criarAcademia', 'AcademiaController', 'criarAcademia');

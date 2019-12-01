@@ -8,7 +8,7 @@ namespace App\Controllers;
     class AcademiaController extends ControllerManager{
 
         public function criarAcademia(){
-            if (!$this->checkRequest($this->post, array("nome", "rua", "numero", "cidade", "estado", "cep", "telefone", "email", "seg_inicio", "seg_fim", "ter_inicio", "ter_fim", "qua_inicio", "qua_fim", "qui_inicio", "qui_fim", "sex_inicio", "sex_fim", "sab_inicio", "sab_fim", "dom_inicio", "dom_fim", "feriado_inicio", "feriado_fim"))){
+            if (!$this->checkRequest($this->post, array("nome", "rua", "numero", "cidade", "estado", "cep", "telefone", "email"))){
                 return $this->badRequest();
             }
 
@@ -28,12 +28,12 @@ namespace App\Controllers;
         }
 
         public function buscaAcademia(){
-            if (!$this->checkRequest($this->get, array("id_academia"))){
+            if (!$this->checkRequest($this->get, array("nome"))){
                 return $this->badRequest();
             }
 
-            $academia = new Academia($_GET["id_academia"]);
-            $result = $academia->buscarAcademia();
+            $academia = new Academia();
+            $result = $academia->buscarAcademia($_GET["nome"]);
 
             $result = mb_convert_encoding($result,"UTF-8","auto");
             $return = json_encode($result, JSON_UNESCAPED_UNICODE);
@@ -63,12 +63,12 @@ namespace App\Controllers;
         }
 
         public function deletarAcademia(){
-            if (!$this->checkRequest($this->post, array("id_academia"))){
+            if (!$this->checkRequest($this->post, array("nome"))){
                 return $this->badRequest();
             }
 
-            $academia = new Academia($_POST["id_academia"]);
-            $result = $academia->deletarAcademia();
+            $academia = new Academia();
+            $result = $academia->deletarAcademia($_POST["nome"]);
 
             $result = mb_convert_encoding($result,"UTF-8","auto");
             $return = json_encode($result, JSON_UNESCAPED_UNICODE);
