@@ -1,6 +1,6 @@
-# Projeto Engenharia de software II UNESP - Bauru
+# Projeto Banco de dados II UNESP - Bauru
 
-Desenvolvido por Matheus Melo e Andre Gaspar
+Desenvolvido por Matheus Melo, Matheus Neves e Andre Gaspar
 
 ## Instruções
 Para Iniciar o projeto, é necessário inicialmente ter o docker instalado.
