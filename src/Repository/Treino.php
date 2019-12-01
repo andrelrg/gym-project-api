@@ -2,7 +2,7 @@
 
 namespace Repository;
 
-use Components\Database\MySql;
+use Components\Database\PostgreSQL;
 
 class Treino{
 
@@ -16,25 +16,15 @@ class Treino{
 
         $raw = "SELECT * FROM Treinos WHERE (usuario).RG = '$rg_aluno';";
 
-        $mysql = new MySql();
-        $result = $mysql->executeRawSql($raw);
+        $postgre = new PostgreSQL();
+        $result = $postgre->executeRawSql($raw, true);
 
-        $mysql->close();
+        $postgre->close();
 
         return $result;
     }
 
     public function novoTreino($data){
-        if (!$data) {
-            return false;
-        }
-
-        $insert = array(
-            'rg_aluno'=>$data['rg_aluno'],
-            'exercicios'=>$data['exercicios'],
-            'dia'=>$data['dia'] ?: 'NOW()',
-        );
-
         if (empty($data)) {
             return false;
         }
@@ -52,10 +42,10 @@ class Treino{
                 implode(', ', $rawAux)
             ."]);";
 
-        $mysql = new MySql();
-        $result = $mysql->executeRawSql($raw);
+        $postgre = new PostgreSQL();
+        $result = $postgre->executeRawSql($raw);
 
-        $mysql->close();
+        $postgre->close();
 
         return $result;
     }
@@ -67,10 +57,10 @@ class Treino{
 
         $raw = "DELETE FROM Treinos WHERE (usuario).RG = '$rg_aluno';";
 
-        $mysql = new MySql();
-        $result = $mysql->executeRawSql($raw);
+        $postgre = new PostgreSQL();
+        $result = $postgre->executeRawSql($raw);
 
-        $mysql->close();
+        $postgre->close();
 
         return $result;
     }

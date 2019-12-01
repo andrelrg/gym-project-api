@@ -2,7 +2,7 @@
 
 namespace Repository;
 
-use Components\Database\MySql;
+use Components\Database\PostgreSQL;
 
 class Aluno{
 
@@ -22,10 +22,10 @@ class Aluno{
                 '$objetivo', $peso, $altura, $med_braco_direito, $med_braco_esquerdo, $med_perna_direita,
                 $med_perna_esquerda, $med_peito, $med_abdomen);";
 
-        $mysql = new MySql();
-        $result = $mysql->executeRawSql($raw);
+        $postgre = new PostgreSQL();
+        $result = $postgre->executeRawSql($raw);
 
-        $mysql->close();
+        $postgre->close();
 
         return $result;
     }

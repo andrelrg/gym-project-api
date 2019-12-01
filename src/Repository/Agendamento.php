@@ -2,7 +2,7 @@
 
 namespace Repository;
 
-use Components\Database\MySql;
+use Components\Database\PostgreSQL;
 
 class Agendamento{
 
@@ -15,14 +15,14 @@ class Agendamento{
         }
 
         if ($tipo == 'aluno') {
-            $raw = "select * from Agendamentos where (aluno).RG = $rg;";
+            $raw = "select * from Agendamentos where (aluno).RG = '$rg';";
         } elseif ($tipo == 'personal'){
-            $raw = "select * from Agendamentos where (personal).RG = $rg;";
+            $raw = "select * from Agendamentos where (personal).RG = '$rg';";
         }
-        $mysql = new MySql();
-        $result = $mysql->executeRawSql($raw);
+        $postgre = new PostgreSQL();
+        $result = $postgre->executeRawSql($raw, true);
 
-        $mysql->close();
+        $postgre->close();
 
         return $result;
     }
@@ -34,15 +34,15 @@ class Agendamento{
         extract($data);
 
         $raw = "insert into Agendamentos (aluno, personal, academia, dia, hora) values 
-                ((SELECT aluno FROM Alunos WHERE (usuario).RG = '$aluno_rg'),
-                (SELECT personal FROM Personais WHERE (usuario).RG = '$personal_rg'),
+                ((SELECT usuario FROM Alunos WHERE (usuario).RG = '$aluno_rg'),
+                (SELECT usuario FROM Personais WHERE (usuario).RG = '$personal_rg'),
                 (SELECT academia FROM Academias WHERE (academia).Nome = '$academia_nome'),
                 to_date('$dia','dd/mm/yyyy'), '$hora');";
 
-        $mysql = new MySql();
-        $result = $mysql->executeRawSql($raw);
+        $postgre = new PostgreSQL();
+        $result = $postgre->executeRawSql($raw);
 
-        $mysql->close();
+        $postgre->close();
 
         return $result;
     }

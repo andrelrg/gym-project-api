@@ -2,7 +2,7 @@
 
 namespace Repository;
 
-use Components\Database\MySql;
+use Components\Database\PostgreSQL;
 
 class Exercicio{
 
@@ -16,10 +16,10 @@ class Exercicio{
 
         $raw = "SELECT * FROM Exercicios WHERE (exercicio).Nome = '$nome'";
 
-        $mysql = new MySql();
-        $result = $mysql->executeRawSql($raw);
+        $postgre = new PostgreSQL();
+        $result = $postgre->executeRawSql($raw, true);
 
-        $mysql->close();
+        $postgre->close();
 
         return $result;
     }
@@ -34,10 +34,10 @@ class Exercicio{
             ((SELECT aparelho FROM Aparelhos WHERE (aparelho).codigo = '$maquina'),
             '$nome', '$series', '$repeticoes', '$descanso');";
 
-        $mysql = new MySql();
-        $result = $mysql->executeRawSql($raw);
+        $postgre = new PostgreSQL();
+        $result = $postgre->executeRawSql($raw);
 
-        $mysql->close();
+        $postgre->close();
 
         return $result;
     }
@@ -46,10 +46,10 @@ class Exercicio{
 
         $sql = "SELECT * FROM Exercicios";
 
-        $mysql = new MySql();
-        $result = $mysql->executeRawSql($sql);
+        $postgre = new PostgreSQL();
+        $result = $postgre->executeRawSql($sql, true);
 
-        $mysql->close();
+        $postgre->close();
 
         return $result;
     }
@@ -61,10 +61,10 @@ class Exercicio{
 
         $raw = "DELETE FROM Exercicios WHERE (exercicio).Nome = '$nome'";
 
-        $mysql = new MySql();
-        $result = $mysql->executeRawSql($raw);
+        $postgre = new PostgreSQL();
+        $result = $postgre->executeRawSql($raw);
 
-        $mysql->close();
+        $postgre->close();
 
         return $result;
     }

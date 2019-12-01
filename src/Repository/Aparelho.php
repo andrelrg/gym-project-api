@@ -2,15 +2,11 @@
 
 namespace Repository;
 
-use Components\Database\MySql;
+use Components\Database\PostgreSQL;
 
 class Aparelho{
 
     function __construct(){
-    }
-
-    public function getId(){
-        return $this->id_aparelho;
     }
 
     public function buscarAparelho($codigo){
@@ -20,10 +16,10 @@ class Aparelho{
 
         $raw = "SELECT * FROM Aparelhos WHERE (aparelho).Codigo = '$codigo';";
 
-        $mysql = new MySql();
-        $result = $mysql->executeRawSql($raw);
+        $postgre = new PostgreSQL();
+        $result = $postgre->executeRawSql($raw, true);
 
-        $mysql->close();
+        $postgre->close();
 
         return $result;
     }
@@ -37,10 +33,10 @@ class Aparelho{
         $raw = "insert into Aparelhos (aparelho.Codigo, aparelho.Nome, aparelho.Musculo, aparelho.Identificacao) values 
             ('$codigo', '$nome', '$musculo', '$identificacao');";
 
-        $mysql = new MySql();
-        $result = $mysql->executeRawSql($raw);
+        $postgre = new PostgreSQL();
+        $result = $postgre->executeRawSql($raw);
 
-        $mysql->close();
+        $postgre->close();
 
         return $result;
     }
@@ -48,10 +44,10 @@ class Aparelho{
     public function mostrarAparelhos(){
         $raw = "SELECT * FROM Aparelhos;";
 
-        $mysql = new MySql();
-        $result = $mysql->executeRawSql($raw);
+        $postgre = new PostgreSQL();
+        $result = $postgre->executeRawSql($raw, true);
 
-        $mysql->close();
+        $postgre->close();
 
         return $result;
     }
@@ -63,10 +59,10 @@ class Aparelho{
 
         $raw = "DELETE FROM Aparelhos WHERE (aparelho).Codigo = '$codigo';";
 
-        $mysql = new MySql();
-        $result = $mysql->executeRawSql($raw);
+        $postgre = new PostgreSQL();
+        $result = $postgre->executeRawSql($raw);
 
-        $mysql->close();
+        $postgre->close();
 
         return $result;
     }

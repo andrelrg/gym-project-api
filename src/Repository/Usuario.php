@@ -3,6 +3,7 @@
 namespace Repository;
 
 use Components\Database\MySql;
+use Components\Database\PostgreSQL;
 
 class Usuario{
 
@@ -15,14 +16,14 @@ class Usuario{
         }
 
         if ($type == 'aluno') {
-            $raw = "select * from Alunos where (usuario).RG = $rg;";
+            $raw = "select * from Alunos where (usuario).RG = '$rg';";
         } elseif ($type == 'personal'){
-            $raw = "select * from Personais where (usuario).RG = $rg;";
+            $raw = "select * from Personais where (usuario).RG = '$rg';";
         }
-        $mysql = new MySql();
-        $result = $mysql->executeRawSql($raw);
+        $postgre = new PostgreSQL();
+        $result = $postgre->executeRawSql($raw, true);
 
-        $mysql->close();
+        $postgre->close();
 
         return $result;
     }
@@ -31,10 +32,10 @@ class Usuario{
 
         $sql = "SELECT * FROM Alunos";
 
-        $mysql = new MySql();
-        $result = $mysql->executeRawSql($sql);
+        $postgre = new PostgreSQL();
+        $result = $postgre->executeRawSql($sql, true);
 
-        $mysql->close();
+        $postgre->close();
 
         return $result;
     }
@@ -43,10 +44,10 @@ class Usuario{
 
         $sql = "SELECT * FROM Personais";
 
-        $mysql = new MySql();
-        $result = $mysql->executeRawSql($sql);
+        $postgre = new PostgreSQL();
+        $result = $postgre->executeRawSql($sql, true);
 
-        $mysql->close();
+        $postgre->close();
 
         return $result;
     }
@@ -62,10 +63,10 @@ class Usuario{
                 ARRAY[('$ddd', '$telefone')::Telefone_TY],
                 ARRAY[('$rua', '$numero', '$cidade', '$bairro', '$cep', '$estado')::Endereco_TY]);";
 
-        $mysql = new MySql();
-        $result = $mysql->executeRawSql($raw);
+        $postgre = new PostgreSQL();
+        $result = $postgre->executeRawSql($raw);
 
-        $mysql->close();
+        $postgre->close();
 
         return $result;
     }
@@ -82,10 +83,10 @@ class Usuario{
                 ((usuario).Email = '$email' AND (usuario).Senha = '$senha')
                 ";
 
-        $mysql = new MySql();
-        $result = $mysql->executeRawSql($raw);
+        $postgre = new PostgreSQL();
+        $result = $postgre->executeRawSql($raw, true);
 
-        $mysql->close();
+        $postgre->close();
 
         return $result;
     }
@@ -96,14 +97,14 @@ class Usuario{
         }
 
         if ($type == 'aluno') {
-            $raw = "delete from Alunos where (aluno).RG = $rg;";
+            $raw = "delete from Alunos where (usuario).RG = '$rg';";
         } elseif ($type == 'personal'){
-            $raw = "delete from Personais where (personal).RG = $rg;";
+            $raw = "delete from Personais where (usuario).RG = '$rg';";
         }
-        $mysql = new MySql();
-        $result = $mysql->executeRawSql($raw);
+        $postgre = new PostgreSQL();
+        $result = $postgre->executeRawSql($raw);
 
-        $mysql->close();
+        $postgre->close();
 
         return $result;
     }

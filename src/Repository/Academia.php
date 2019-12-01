@@ -2,7 +2,7 @@
 
 namespace Repository;
 
-use Components\Database\MySql;
+use Components\Database\PostgreSQL;
 
 class Academia{
 
@@ -15,10 +15,10 @@ class Academia{
         }
 
         $raw = "select * from Academias where (academia).Nome = '$nome';";
-        $mysql = new MySql();
-        $result = $mysql->executeRawSql($raw);
+        $postgre = new PostgreSQL();
+        $result = $postgre->executeRawSql($raw, true);
 
-        $mysql->close();
+        $postgre->close();
 
         return $result;
     }
@@ -36,10 +36,10 @@ class Academia{
                 ARRAY[('$ddd', '$telefone')::Telefone_TY],
                 '$email', '$funcionamento_semana', '$funcionamento_sabado', '$funcionamento_domingo', '$funcionamento_feriado');";
 
-        $mysql = new MySql();
-        $result = $mysql->executeRawSql($raw);
+        $postgre = new PostgreSQL();
+        $result = $postgre->executeRawSql($raw);
 
-        $mysql->close();
+        $postgre->close();
 
         return $result;
     }
@@ -48,10 +48,10 @@ class Academia{
 
         $raw = "SELECT * FROM Academias;";
 
-        $mysql = new MySql();
-        $result = $mysql->executeRawSql($raw);
+        $postgre = new PostgreSQL();
+        $result = $postgre->executeRawSql($raw, true);
 
-        $mysql->close();
+        $postgre->close();
 
         return $result;
     }
@@ -61,12 +61,12 @@ class Academia{
             return false;
         }
 
-        $raw = "DELETE FROM Academia WHERE (academia).Nome = '$nome';";
+        $raw = "DELETE FROM Academias WHERE (academia).Nome = '$nome';";
 
-        $mysql = new MySql();
-        $result = $mysql->executeRawSql($raw);
+        $postgre = new PostgreSQL();
+        $result = $postgre->executeRawSql($raw);
 
-        $mysql->close();
+        $postgre->close();
 
         return $result;
     }
